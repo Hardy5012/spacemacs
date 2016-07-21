@@ -56,8 +56,14 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
+     (spacemacs-layouts :variables layouts-enable-autosave nil
+                        layouts-autosave-delay 300)
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
+     (chinese :variables
+              chinese-default-input-method 'wubi
+              chinese-enable-youdao-dict t
+              )
      syntax-checking
      yelang
      ;; version-control
@@ -126,8 +132,10 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(solarized-light
+                         solarized-dark
+                         monokai
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -298,6 +306,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE") 
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
