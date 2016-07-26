@@ -34,6 +34,7 @@
     evil
     org
     org-octopress
+    prodigy
     )
   "The list of Lisp packages required by the yelang layer.
 
@@ -198,6 +199,30 @@ Each entry is either:
   (setq org-caldav-files org-agenda-files)
   (setq org-icalendar-date-time-format ";TZID=%Z:%Y%m%dT%H%M%S")
 
+  ;; change it to ivy
+      (defun yelang/org-insert-src-block (src-code-type)
+        "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+        (interactive
+         (let ((src-code-types
+                '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+                  "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+                  "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+                  "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+                  "scheme" "sqlite")))
+           (list (ido-completing-read "Source code type: " src-code-types))))
+        (progn
+          (newline-and-indent)
+          (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+          (newline-and-indent)
+          (insert "#+END_SRC\n")
+          (previous-line 2)
+          (org-edit-src-code)))
+
+      (add-hook 'org-mode-hook '(lambda ()
+                                  ;; keybinding for editing source code blocks
+                                  ;; keybinding for inserting code blocks
+                                  (local-set-key (kbd "C-c i s")
+                                                 'yelang/org-insert-src-block)))
   )
 (defun yelang/init-org-octopress ()
   (use-package org-octopress
@@ -221,3 +246,64 @@ Each entry is either:
 
       )))
 ;;; packages.el ends here
+(defun yelang/post-init-prodigy ()
+  (progn
+    (prodigy-define-tag
+      :name 'jekyll
+      :env '(("LANG" "en_US.UTF-8")
+             ("LC_ALL" "en_US.UTF-8")))
+    ;; define service
+    (prodigy-define-service
+      :name "Preview cocos2d-x web"
+      :command "python"
+      :args '("-m" "SimpleHTTPServer" "6001")
+      :cwd "~/cocos2d-x/web"
+      :tags '(work)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Preview creator engine"
+      :command "python"
+      :args '("-m" "SimpleHTTPServer" "6004")
+      :cwd "~/Github/fireball/engine"
+      :tags '(work)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Hexo Server"
+      :command "hexo"
+      :args '("server")
+      :cwd "/home/huaming_li/github/blog/"
+      :tags '(hexo server)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Hexo Deploy"
+      :command "hexo"
+      :args '("deploy" "--generate")
+      :cwd "~/github/blog"
+      :tags '(hexo deploy)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Debug Fireball"
+      :command "npm"
+      :args '("start" "--" "--nologin" "/Users/guanghui/Github/example-cases")
+      :cwd "~/Github/fireball/"
+      :tags '(work)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Org wiki preview"
+      :command "python"
+      :args '("-m" "SimpleHTTPServer" "8088")
+      :cwd "~/org-notes/public_html"
+      :tags '(org-mode)
+      :init (lambda () (browse-url "http://localhost:8088"))
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)))

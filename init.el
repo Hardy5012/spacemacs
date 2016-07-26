@@ -53,6 +53,7 @@ values."
             )
      git
      markdown
+     prodigy 
      org
      ;; (shell :variables
      ;;        shell-default-height 30
