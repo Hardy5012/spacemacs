@@ -1,4 +1,4 @@
-
+(require 'cl)
 (defun yelang/load-my-layout ()
   (interactive)
   (persp-load-state-from-file (concat persp-save-dir "ylayouts")))

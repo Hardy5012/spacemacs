@@ -40,7 +40,12 @@ values."
      helm
      ivy
      better-defaults
-     auto-completion
+     ;; for development
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup nil
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-private-snippets-directory "~/.spacemacs.d/private/snippets/")
      semantic
      better-defaults
      ;;flycheck

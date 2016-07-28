@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: file header
+# key: fh
+# --
+/********************************************************************************
+  Copyright: 2016, Rione 
+  FileName: `(file-name-nondirectory (buffer-file-name))`
+  Author: `(user-full-name)`
+  Email: lihm@chinaetf.com.cn
+  Date: `(format-time-string "<%Y-%m-%d %H:%M>" (current-time))`
+  Description: $0
+ *****************************************************************************/
