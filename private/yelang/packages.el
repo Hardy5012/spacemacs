@@ -32,9 +32,14 @@
 (defconst yelang-packages
   '(
     evil
+    lispy
     org
     org-octopress
     prodigy
+    protobuf-mode
+    (emacs-lisp :location built-in) 
+    (doxymacs :location local)
+    google-c-style
     )
   "The list of Lisp packages required by the yelang layer.
 
@@ -118,7 +123,7 @@ Each entry is either:
           ("b" "Blog" tags-todo "BLOG")
           ("p" . " 项目安排 ")
           ("pw" tags-todo "PROJECT+WORK+CATEGORY=\"programming\"")
-          ("pl" tags-todo "PROJECT+DREAM+CATEGORY=\"codefalling\"")
+          ("pl" tags-todo "PROJECT+DREAM+CATEGORY=\"yelang\"")
           ("W" "Weekly Review"
            ((stuck "")            ;; review stuck projects as designated by org-stuck-projects
             (tags-todo "PROJECT") ;; review all projects (assuming you use todo keywords to designate projects)
@@ -307,3 +312,58 @@ Each entry is either:
       :init (lambda () (browse-url "http://localhost:8088"))
       :kill-signal 'sigkill
       :kill-process-buffer-on-stop t)))
+
+(defun yelang/init-lispy ()
+  "Initialize lispy"
+  (use-package lispy
+    :defer t
+    :diminish (lispy-mode)
+    :init
+    (progn
+      (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+      (add-hook 'ielm-mode-hook (lambda () (lispy-mode 1)))
+      (add-hook 'inferior-emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+      ;; (add-hook 'spacemacs-mode-hook (lambda () (lispy-mode 1)))
+      (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+      (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1)))
+      (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1))))
+    :config
+    (progn
+      (defun conditionally-enable-lispy ()
+        (when (eq this-command 'eval-expression)
+          (lispy-mode 1)))
+
+      (add-hook
+       'minibuffer-setup-hook
+       'conditionally-enable-lispy)
+      (define-key lispy-mode-map (kbd "s-1") 'lispy-describe-inline)
+      (define-key lispy-mode-map (kbd "s-k") 'lispy-splice)
+      (define-key lispy-mode-map (kbd "s-2") 'lispy-arglist-inline))))
+
+(defun yelang/init-doxymacs ()
+  "Initialize doxymacs"
+  (use-package doxymacs
+    :init
+    (add-hook 'c-mode-common-hook 'doxymacs-mode)
+    :config
+    (progn
+      (defun my-doxymacs-font-lock-hook ()
+        (if (or (eq major-mode 'c-mode) (eq major-mode 'c++-mode))
+            (doxymacs-font-lock)))
+      (add-hook 'font-lock-mode-hook 'my-doxymacs-font-lock-hook)
+      (spacemacs|hide-lighter doxymacs-mode))))
+
+(defun yelang/init-protobuf-mode ()
+  (use-package protobuf-mode
+    :defer t
+    ))
+
+(defun yelang/init-google-c-style ()
+  (use-package google-c-style
+    :defer t
+    :init
+    (add-hook 'c++-mode-hook
+              (lambda ()
+                (google-set-c-style)
+                (google-make-newline-indent)
+                ))))

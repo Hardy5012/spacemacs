@@ -27,7 +27,7 @@ values."
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/private/")
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
@@ -60,6 +60,7 @@ values."
      markdown
      prodigy 
      org
+     yaml
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -71,8 +72,14 @@ values."
               chinese-default-input-method 'wubi
               chinese-enable-youdao-dict t
               )
+     (python :variables
+             python-test-runner 'pytest
+             python-enable-yapf-format-on-save t
+             py-yapf-options '("--style=google"))
      syntax-checking
      yelang
+     yt-cc
+     yt-python
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -314,6 +321,10 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE") 
+  (define-coding-system-alias 'UTF-8 'utf-8)
+  (set-language-environment "UTF-8")
+  (set-default-coding-systems 'utf-8)
+  (global-hungry-delete-mode t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

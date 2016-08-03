@@ -27,7 +27,23 @@
      ("frag" "vert")
      (nil "lock" "gpg")
      ("lock" "")
-     ("gpg" "")))))
+     ("gpg" ""))))
+ '(safe-local-variable-values
+   (quote
+    ((eval setq flycheck-clang-include-path
+           (list
+            (expand-file-name "~/github/lytz/stockbs_svr/stockbs_svr/")
+            (expand-file-name "~/rts3/src/common/ground_15_04_09/")
+            (expand-file-name "/usr/local/protobuf/include/")))
+     (company-clang-arguments "-std=c++11" "-I/home/huaming_li/github/lytz/stockbs_svr/stockbs_svr/" "-I/home/huaming_li/rts3/src/common/ground_15_04_09/" "-I/usr/local/protobuf/include/")
+     (eval setq flycheck-clang-include-path
+           (list
+            (expand-file-name "~/github/lytz/Trading_Repo/FutureServer/src/")
+            (expand-file-name "~/github/lytz/rlib-cpp/")
+            (expand-file-name "~/github/lytz/")
+            (expand-file-name "~/github/lytz/Trading_Repo/FutureServer/libs/tradeapi/")
+            (expand-file-name "/usr/local/protobuf/include/")))
+     (company-clang-arguments "-std=c++11" "-I/home/huaming_li/github/lytz/Trading_Repo/FutureServer/src/" "-I/home/huaming_li/github/lytz/rlib-cpp/" "-I/home/huaming_li/github/lytz/" "-I/home/huaming_li/github/lytz/Trading_Repo/FutureServer/libs/tradeapi/" "-I/usr/local/protobuf/include/")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
