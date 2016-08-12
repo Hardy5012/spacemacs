@@ -30,7 +30,15 @@
      ("gpg" ""))))
  '(safe-local-variable-values
    (quote
-    ((eval setq flycheck-clang-include-path
+    ((company-clang-arguments "-std=c++11" "-I/home/huaming_li/github/lytz/stockbs_svr/stockbs_svr/" "-I/home/huaming_li/rts3/src/common/ground_15_04_09/" "-I/usr/local/protobuf/include/" "-I/home/huaming_li/github/redisclient/src/")
+     (eval setq flycheck-clang-include-path
+           (list
+            (expand-file-name "~/github/lytz/stockbs_svr/stockbs_svr/")
+            (expand-file-name "~/rts3/src/common/ground_15_04_09/")
+            (expand-file-name "/usr/local/protobuf/include/")
+            (expand-file-name "/home/huaming_li/github/redisclient/src/")))
+     (company-clang-arguments "-std=c++11" "-I/home/huaming_li/github/lytz/stockbs_svr/stockbs_svr/" "-I/home/huaming_li/rts3/src/common/ground_15_04_09/" "-I/usr/local/protobuf/include/" "/home/huaming_li/github/redisclient/src/")
+     (eval setq flycheck-clang-include-path
            (list
             (expand-file-name "~/github/lytz/stockbs_svr/stockbs_svr/")
             (expand-file-name "~/rts3/src/common/ground_15_04_09/")

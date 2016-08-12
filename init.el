@@ -50,7 +50,7 @@ values."
      better-defaults
      ;;flycheck
      emacs-lisp
-     cscope
+     ;; cscope
      gtags
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
@@ -320,7 +320,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE") 
+  ;; (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE")
   (define-coding-system-alias 'UTF-8 'utf-8)
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8)

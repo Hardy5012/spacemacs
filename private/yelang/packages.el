@@ -40,6 +40,7 @@
     (emacs-lisp :location built-in) 
     (doxymacs :location local)
     google-c-style
+    (occur-mode :location built-in)
     )
   "The list of Lisp packages required by the yelang layer.
 
@@ -367,3 +368,25 @@ Each entry is either:
                 (google-set-c-style)
                 (google-make-newline-indent)
                 ))))
+
+(defun yelang/init-occur-mode ()
+  (defun occur-non-ascii ()
+    "Find any non-ascii characters in the current buffer."
+    (interactive)
+    (occur "[^[:ascii:]]"))
+
+  (defun occur-dwim ()
+    "Call `occur' with a sane default."
+    (interactive)
+    (push (if (region-active-p)
+              (buffer-substring-no-properties
+               (region-beginning)
+               (region-end))
+            (let ((sym (thing-at-point 'symbol)))
+              (when (stringp sym)
+                (regexp-quote sym))))
+          regexp-history)
+    (deactivate-mark)
+    (call-interactively 'occur))
+  (evilified-state-evilify occur-mode occur-mode-map
+    "RET" 'occur-mode-goto-occurrence))

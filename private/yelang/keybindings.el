@@ -6,3 +6,10 @@
 (if (configuration-layer/layer-usedp 'helm)
     (progn (global-set-key (kbd "<f1>") 'yelang/helm-hotspots)
            (spacemacs/set-leader-keys "oo" 'yelang/helm-hotspots)))
+
+(bind-key* "M-s o" 'occur-dwim)
+(bind-key* "C-=" 'er/expand-region)
+
+
+(spacemacs/set-leader-keys "od" 'occur-dwim)
+
