@@ -48,13 +48,15 @@ values."
                       auto-completion-private-snippets-directory "~/.spacemacs.d/private/snippets/")
      semantic
      better-defaults
-     ;;flycheck
+     ;; flycheck
      emacs-lisp
      ;; cscope
      gtags
+     syntax-checking
+     ycmd
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t
+            ;; c-c++-enable-clang-support t
             )
      git
      markdown
@@ -325,6 +327,8 @@ you should place your code here."
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8)
   (global-hungry-delete-mode t)
+  (set-variable 'ycmd-server-command '("python" "/home/huaming_li/github/ycmd/ycmd/"))
+  ;; (set-variable 'ycmd-extra-conf-whitelist '("/home/huaming_li/github/lytz/stockbs_svr/build/"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
