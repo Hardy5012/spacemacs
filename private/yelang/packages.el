@@ -390,3 +390,10 @@ Each entry is either:
     (call-interactively 'occur))
   (evilified-state-evilify occur-mode occur-mode-map
     "RET" 'occur-mode-goto-occurrence))
+
+(defun yelang/init-protobuf-mode ()
+  (use-package protobuf-mode
+    :defer t
+    :init
+    ()
+    ))

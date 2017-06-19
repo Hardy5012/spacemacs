@@ -30,7 +30,7 @@ values."
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/private/")
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(nginx
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -66,6 +66,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
+	 (javascript :variables javascript-disable-tern-port-files nil)
      (spacemacs-layouts :variables layouts-enable-autosave nil
                         layouts-autosave-delay 300)
      (spell-checking :variables
@@ -79,6 +80,7 @@ values."
              python-enable-yapf-format-on-save t
              py-yapf-options '("--style=google"))
      syntax-checking
+	 latex
      yelang
      yt-cc
      yt-python
@@ -266,7 +268,8 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'prog-mode
+ dotspacemacs-line-numbers '(:relative nil)   
+ ;;dotspacemacs-line-numbers 'prog-mode
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -323,6 +326,8 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE")
+  (setq-default indent-tabs-mode t)
+  (setq-default default-tab-width 4)
   (define-coding-system-alias 'UTF-8 'utf-8)
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8)
@@ -335,3 +340,9 @@ you should place your code here."
 ;; auto-generate custom variable definitions.
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+)
