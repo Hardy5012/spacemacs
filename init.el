@@ -27,10 +27,11 @@ values."
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/private/")
+   dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(nginx
+   '(csv
+	 nginx
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -40,28 +41,40 @@ values."
      helm
      ivy
      better-defaults
+	 ranger
+	 clolors
+	 search-engine
+     graphviz
+     (syntax-checking :variables syntax-checking-enable-by-default nil
+                      syntax-checking-enable-tooltips nil)
+	 (vinegar :variables vinegar-reuse-dired-buffer t)
      ;; for development
-     (auto-completion :variables
-                      auto-completion-enable-snippets-in-popup nil
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-help-tooltip t
-                      auto-completion-private-snippets-directory "~/.spacemacs.d/private/snippets/")
+	 (auto-completion :variables auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      :disabled-for org markdown)
+	 (ibuffer :variables ibuffer-group-buffers-by 'projects)
      semantic
-     better-defaults
      ;; flycheck
      emacs-lisp
      ;; cscope
      gtags
-     syntax-checking
+	 docker
      ycmd
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             ;; c-c++-enable-clang-support t
             )
-     git
+	 (git :variables
+          git-magit-status-fullscreen t
+          magit-push-always-verify nil
+          magit-save-repository-buffers 'dontask
+          magit-revert-buffers 'silent
+          magit-refs-show-commit-count 'all
+          magit-revision-show-gravatars nil)
+		  
      markdown
-     prodigy 
-     org
+     prodigy
+	 (org :variables org-want-todo-bindings t)
      yaml
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -71,20 +84,20 @@ values."
                         layouts-autosave-delay 300)
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
-     (chinese :variables
-              chinese-default-input-method 'wubi
-              chinese-enable-youdao-dict t
-              )
+	 ;; (chinese :packages youdao-dictionary fcitx
+     ;;          :variables chinese-enable-fcitx nil
+	 ;; 		  chinese-default-input-method 'wubi
+     ;;          chinese-enable-youdao-dict t)
+	 (chinese :variables
+			  chinese-default-input-method 'wubi
+              chinese-enable-youdao-dict t)
      (python :variables
              python-test-runner 'pytest
              python-enable-yapf-format-on-save t
              py-yapf-options '("--style=google"))
-     syntax-checking
 	 latex
      yelang
-     yt-cc
-     yt-python
-     ;; version-control
+     version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -311,9 +324,9 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq configuration-layer--elpa-archives
-        '(("melpa-cn" . "http://elpa.zilongshanren.com/melpa/")
-          ("org-cn"   . "http://elpa.zilongshanren.com/org/")
-          ("gnu-cn"   . "http://elpa.zilongshanren.com/gnu/")))
+        '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+          ("org-cn"   . "http://elpa.emacs-china.org/org/")
+          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   )
