@@ -135,3 +135,31 @@ open and unsaved."
   "goto up directory and resue buffer"
   (interactive)
   (find-alternate-file ".."))
+
+
+(defun get-word-boundary ()
+  "Return the boundary of the current word.
+  The return value is of the form: (cons pos1 pos2).
+  "
+  (save-excursion
+   (let (p1 p2)
+    (progn
+     (skip-chars-backward "-A-Za-z0-9_") ;; here you can choose which symbols to use
+     (setq p1 (point))
+     (skip-chars-forward "-A-Za-z0-9_") ;; put the same here
+     (setq p2 (point)))
+    (cons p1 p2)
+   ))
+ )
+ (defun select-word ()
+ "Mark the url under cursor."
+ (interactive)
+ ;  (require 'thingatpt)
+ (let (bds)
+   (setq bds (get-word-boundary))
+ 
+   (set-mark (car bds))
+   (goto-char (cdr bds))
+   )
+ )
+ (global-set-key [double-mouse-1] 'select-word)

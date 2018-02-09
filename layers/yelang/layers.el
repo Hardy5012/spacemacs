@@ -14,4 +14,5 @@
                                       yelang-programming
                                       yelang-ui
 									  yelang-org
-									  yelang-better-defaults))
+									  yelang-better-defaults
+									  ))

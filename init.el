@@ -31,18 +31,17 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(csv
-	 nginx
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
+     ;; helm
      ivy
      better-defaults
 	 ranger
-	 clolors
+	 ;; clolors
 	 search-engine
      graphviz
      (syntax-checking :variables syntax-checking-enable-by-default nil
@@ -58,7 +57,6 @@ values."
      emacs-lisp
      ;; cscope
      gtags
-	 docker
      ycmd
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
@@ -97,7 +95,7 @@ values."
              py-yapf-options '("--style=google"))
 	 latex
      yelang
-     version-control
+     ;; version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these

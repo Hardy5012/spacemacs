@@ -1,11 +1,11 @@
-										; -*- lexical-binding: t -*-
+; -*- lexical-binding: t -*-
 
 
 (defconst yelang-better-defaults-packages
   '(
-    (dired-mode :location built-in)
-    (profiler :location built-in)
-    (recentf :location built-in)
+     (dired-mode :location built-in)
+     (profiler :location built-in)
+     (recentf :location built-in)
     )
 )
 

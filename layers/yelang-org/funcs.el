@@ -57,7 +57,7 @@
 
 
 ;; Screenshot
-(defun yelang//insert-org-or-md-img-link (prefix imagename)
+(defun yelang/insert-org-or-md-img-link (prefix imagename)
   (if (equal (file-name-extension (buffer-file-name)) "org")
       (insert (format "[[%s%s]]" prefix imagename))
     (insert (format "![%s](%s%s)" imagename prefix imagename))))

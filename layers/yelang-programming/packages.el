@@ -463,8 +463,8 @@
       "gd" 'etags-select-find-tag-at-point)
 
 
-    (add-hook 'c++-mode-hook 'my-setup-develop-environment)
-    (add-hook 'c-mode-hook 'my-setup-develop-environment)
+    ;; (add-hook 'c++-mode-hook 'my-setup-develop-environment)
+    ;; (add-hook 'c-mode-hook 'my-setup-develop-environment)
 
 
     ;; http://stackoverflow.com/questions/23553881/emacs-indenting-of-c11-lambda-functions-cc-mode
@@ -485,8 +485,9 @@
     (setq c-default-style "linux") ;; set style to "linux"
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0)
-    (with-eval-after-load 'c++-mode
-      (define-key c++-mode-map (kbd "s-.") 'company-ycmd)))
+    ;; (with-eval-after-load 'c++-mode
+    ;;   (define-key c++-mode-map (kbd "s-.") 'company-ycmd))
+    )
 
   )
 
@@ -511,10 +512,11 @@
     (eval-after-load 'ycmd
       '(spacemacs|hide-lighter ycmd-mode))
 
-    (spacemacs/set-leader-keys-for-major-mode 'c-mode
-      "tb" 'zilong/company-toggle-company-ycmd)
-    (spacemacs/set-leader-keys-for-major-mode 'c++-mode
-      "tb" 'zilong/company-toggle-company-ycmd)))
+    ;; (spacemacs/set-leader-keys-for-major-mode 'c-mode
+    ;;   "tb" 'yelang/company-toggle-company-ycmd)
+    ;; (spacemacs/set-leader-keys-for-major-mode 'c++-mode
+    ;;   "tb" 'yelang/company-toggle-company-ycmd)
+	))
 
 ;; when many project has the need to use tags, I will give etags-table and etags-update a try
 (defun yelang-programming/init-etags-select ()
