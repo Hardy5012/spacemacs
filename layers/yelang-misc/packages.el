@@ -12,8 +12,6 @@
         discover-my-major
         ace-window
         avy
-        4clojure
-        persp-mode
         tiny
         ;; smartparens
         flyspell-correct
@@ -21,20 +19,15 @@
         markdown-mode
         swiper
         magit
-        git-messenger
-        gist
         hydra
         wrap-region
         ranger
         golden-ratio
         (highlight-global :location (recipe :fetcher github :repo "glen-dai/highlight-global"))
-        browse-at-remote
+
         ))
 
-(defun yelang-misc/init-browse-at-remote ()
-  (use-package browse-at-remote
-    :defer t
-    :init (spacemacs/set-leader-keys "gho" 'browse-at-remote)))
+
 
 (defun yelang-misc/init-highlight-global ()
   (use-package highlight-global
@@ -140,40 +133,7 @@
 
     ))
 
-(defun yelang-misc/post-init-gist ()
-  (use-package gist
-    :defer t
-    :init
-    (setq gist-list-format
-          '((files "File" 30 nil "%s")
-            (id "Id" 10 nil identity)
-            (created "Created" 20 nil "%D %R")
-            (visibility "Visibility" 10 nil
-                        (lambda
-                          (public)
-                          (or
-                           (and public "public")
-                           "private")))
-            (description "Description" 0 nil identity)))
-    :config
-    (progn
-      (spacemacs|define-transient-state gist-list-mode
-        :title "Gist-mode Transient State"
-        :bindings
-        ("k" gist-kill-current "delete gist")
-        ("e" gist-edit-current-description "edit gist title")
-        ("+" gist-add-buffer "add a file")
-        ("-" gist-remove-file "delete a file")
-        ("y" gist-print-current-url "print url")
-        ("b" gist-browse-current-url "browse gist in browser")
-        ("*" gist-star "star gist")
-        ("^" gist-unstar "unstar gist")
-        ("f" gist-fork "fork gist")
-        ("q" nil "quit" :exit t)
-        ("<escape>" nil nil :exit t))
-      (spacemacs/set-leader-keys-for-major-mode 'gist-list-mode
-        "." 'spacemacs/gist-list-mode-transient-state/body))
-    ))
+
 
 (defun yelang-misc/init-peep-dired ()
   ;;preview files in dired
@@ -222,35 +182,6 @@
 
 
 
-(defun yelang-misc/init-litable ()
-  (use-package litable
-    :init
-    :defer t))
-
-(defun yelang-misc/init-osx-dictionary ()
-  (use-package osx-dictionary
-    :init
-    (progn
-      (evilified-state-evilify osx-dictionary-mode osx-dictionary-mode-map)
-      (setq osx-dictionary-use-chinese-text-segmentation t)
-      (global-set-key (kbd "C-c d") 'osx-dictionary-search-pointer)
-      )))
-
-
-(defun yelang-misc/init-4clojure ()
-  (use-package 4clojure
-    :init
-    (progn
-      (spacemacs/declare-prefix "o4" "4clojure")
-      (spacemacs/set-leader-keys "o4q" '4clojure-open-question)
-      (spacemacs/set-leader-keys "o4n" '4clojure-next-question)
-      (spacemacs/set-leader-keys "o4p" '4clojure-previous-question)
-      (spacemacs/set-leader-keys "o4c" '4clojure-check-answers)
-      )))
-
-
-
-
 (defun yelang-misc/post-init-avy ()
   (progn
     (global-set-key (kbd "C-s-'") 'avy-goto-char-2)
@@ -268,55 +199,6 @@
       (evilified-state-evilify makey-key-mode makey-key-mode-get-key-map)
       )))
 
-
-(defun yelang-misc/post-init-elfeed ()
-  (use-package elfeed
-    :init
-    (global-set-key (kbd "C-x w") 'elfeed)
-    :defer t
-    :config
-    (progn
-
-      (setq elfeed-feeds
-            '("http://nullprogram.com/feed/"
-              "http://z.caudate.me/rss/"
-              "http://irreal.org/blog/?feed=rss2"
-              "http://feeds.feedburner.com/LostInTheTriangles"
-              "http://tonybai.com/feed/"
-              "http://planet.emacsen.org/atom.xml"
-              "http://feeds.feedburner.com/emacsblog"
-              "http://blog.binchen.org/rss.xml"
-              "http://oremacs.com/atom.xml"
-              "http://blog.gemserk.com/feed/"
-              "http://www.masteringemacs.org/feed/"
-              "http://t-machine.org/index.php/feed/"
-              "http://gameenginebook.blogspot.com/feeds/posts/default"
-              "http://feeds.feedburner.com/ruanyifeng"
-              "http://coolshell.cn/feed"
-              "http://blog.devtang.com/atom.xml"
-              "http://emacsist.com/rss"
-              "http://puntoblogspot.blogspot.com/feeds/2507074905876002529/comments/default"
-              "http://angelic-sedition.github.io/atom.xml"))
-
-      ;; (evilify elfeed-search-mode elfeed-search-mode-map)
-      (evilified-state-evilify-map elfeed-search-mode-map
-        :mode elfeed-search-mode
-        :bindings
-        "G" 'elfeed-update
-        "g" 'elfeed-search-update--force)
-
-      (defun zilong/elfeed-mark-all-as-read ()
-        (interactive)
-        (mark-whole-buffer)
-        (elfeed-search-untag-all-unread))
-
-      (define-key elfeed-search-mode-map (kbd "R") 'zilong/elfeed-mark-all-as-read)
-
-      (defadvice elfeed-show-yank (after elfeed-show-yank-to-kill-ring activate compile)
-        "Insert the yanked text from x-selection to kill ring"
-        (kill-new (x-get-selection)))
-
-      (ad-activate 'elfeed-show-yank))))
 
 (defun yelang-misc/post-init-evil ()
   (progn
@@ -518,32 +400,6 @@
             orgtbl-hijacker-command-109))
     ))
 
-(defun yelang-misc/post-init-persp-mode ()
-  (setq persp-kill-foreign-buffer-action 'kill)
-  (setq persp-lighter nil)
-  (when (fboundp 'spacemacs|define-custom-layout)
-    (spacemacs|define-custom-layout "@Cocos2D-X"
-      :binding "c"
-      :body
-      (find-file "~/cocos2d-x/cocos/ui/UIWidget.cpp")
-      (split-window-right)
-      (find-file "~/cocos2d-x/cocos/cocos2d.cpp"))))
-
-;; (defun yelang-misc/post-init-chinese-wbim ()
-;;   (progn
-;;     (bind-key* ";" 'chinese-wbim-insert-ascii)
-;;     (setq chinese-wbim-punc-translate-p nil)
-;;     (spacemacs/declare-prefix "ot" "Toggle")
-;;     (spacemacs/set-leader-keys
-;;       "otp" 'chinese-wbim-punc-translate-toggle)
-;;     (setq chinese-wbim-wb-use-gbk t)
-;;     (add-hook 'chinese-wbim-wb-load-hook
-;;               (lambda ()
-;;                 (let ((map (chinese-wbim-mode-map)))
-;;                   (define-key map "-" 'chinese-wbim-previous-page)
-;;                   (define-key map "=" 'chinese-wbim-next-page))))
-;;     ))
-
 
 (defun yelang-misc/post-init-evil-escape ()
   (setq evil-escape-delay 0.2))
@@ -578,7 +434,6 @@
           ;; (setq-default ffip-prune-patterns '(".git" ".hg" "*.svn" "node_modules" "bower_components" "obj"))
           ))
       (ad-activate 'find-file-in-project))))
-
 
 
 
@@ -675,22 +530,6 @@
 
     ))
 
-(defun yelang-misc/init-moz-controller ()
-  (use-package moz-controller
-    :init
-    (progn
-      (moz-controller-global-mode t)
-      (spacemacs|hide-lighter moz-controller-mode))))
-
-
-(defun yelang-misc/init-ag ()
-  (use-package ag
-    :init))
-
-(defun yelang-misc/post-init-erc ()
-  (progn
-    (add-hook 'erc-text-matched-hook 'my-erc-hook)
-    (spaceline-toggle-erc-track-off)))
 
 (defun yelang-misc/init-wrap-region ()
   (use-package wrap-region
@@ -795,12 +634,6 @@
 
     (setq magit-process-popup-time 10)))
 
-(defun yelang-misc/post-init-git-messenger ()
-  (use-package git-messenger
-    :defer t
-    :config
-    (progn
-      (define-key git-messenger-map (kbd "f") 'zilong/github-browse-commit))))
 
 (defun yelang-misc/post-init-markdown-mode ()
   (progn
