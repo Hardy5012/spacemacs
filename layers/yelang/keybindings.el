@@ -20,7 +20,7 @@
 ;; http://emacs.stackexchange.com/questions/220/how-to-bind-c-i-as-different-from-tab
 ;; (define-key input-decode-map [?\C-i] [C-i])
 ;; (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
-(global-set-key (kbd "C-M-\\") 'indent-region-or-buffer)
+;; (global-set-key (kbd "C-M-\\") 'indent-region-or-buffer)
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 
 ;; (global-set-key (kbd "C-.") 'company-capf)
@@ -170,13 +170,3 @@
   (global-set-key (kbd "s-n") 'make-frame)
   (global-set-key (kbd "s-z") 'undo-tree-undo)
   (global-set-key (kbd "s-Z") 'undo-tree-redo))
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            (which-key-add-major-mode-key-based-replacements 'python-mode
-              "C-c r" "anaconda find reference cmds"
-              "C-c C-t" "skeleton"
-              "C-c !" "flycheck")
-            (define-key python-mode-map (kbd "C-c C-b") 'python-add-breakpoint)
-            (define-key python-mode-map (kbd "C-c C-d") 'sphinx-doc)
-            (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-buffer-switch)))

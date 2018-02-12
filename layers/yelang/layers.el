@@ -12,7 +12,7 @@
 (configuration-layer/declare-layers '(
                                       yelang-misc
                                       yelang-programming
-                                      yelang-ui
+                                      ;; yelang-ui
 									  yelang-org
 									  yelang-better-defaults
 									  ))

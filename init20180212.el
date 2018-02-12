@@ -93,8 +93,7 @@ values."
      (python :variables
              python-test-runner 'pytest
              python-enable-yapf-format-on-save t
-             py-yapf-options '("--style=google")
-			 )
+             py-yapf-options '("--style=google"))
 	 latex
      yelang
      ;; version-control
@@ -105,7 +104,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages that will not be install and loaded.
-   dotspacemacs-excluded-packages '(evil-unimpaired importmagic)
+   dotspacemacs-excluded-packages '(evil-unimpaired)
    ;; Defines the behaviour of Spacemacs when downloading packages.
    ;; Possible values are `used', `used-but-keep-unused' and `all'. `used' will
    ;; download only explicitly used packages and remove any unused packages as

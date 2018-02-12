@@ -17,20 +17,17 @@
         yasnippet
         web-mode
         js-doc
-        lua-mode
         (cc-mode :location built-in)
         ;; flycheck-clojure
-        etags-select
-        (python :location built-in)
+        ;; etags-select
         (emacs-lisp :location built-in)
         ;; clojure-mode
         company
         (eldoc :location built-in)
         dumb-jump
         graphviz-dot-mode
-        cider
-        ;; editorconfig
         robe
+		google-c-style
         ))
 
 (defun yelang-programming/init-sphinx-doc ()
@@ -68,34 +65,6 @@
         "sL" 'yelang/ruby-send-current-line-and-go
         "sI" 'yelang/start-inf-ruby-and-robe))))
 
-(defun yelang-programming/init-editorconfig ()
-  (use-package editorconfig
-    :init
-    (progn
-      (defun conditional-enable-editorconfig ()
-        (if (and (yelang/vcs-project-root)
-                 (locate-dominating-file default-directory ".editorconfig"))
-            (editorconfig-apply)))
-      (add-hook 'prog-mode-hook 'conditional-enable-editorconfig))))
-
-(defun yelang-programming/post-init-cider ()
-  (setq cider-cljs-lein-repl
-        "(do (require 'figwheel-sidecar.repl-api)
-           (figwheel-sidecar.repl-api/start-figwheel!)
-           (figwheel-sidecar.repl-api/cljs-repl))")
-
-  (defun yelang/cider-figwheel-repl ()
-    (interactive)
-    (save-some-buffers)
-    (with-current-buffer (cider-current-repl-buffer)
-      (goto-char (point-max))
-      (insert "(require 'figwheel-sidecar.repl-api)
-             (figwheel-sidecar.repl-api/start-figwheel!) ; idempotent
-             (figwheel-sidecar.repl-api/cljs-repl)")
-      (cider-repl-return)))
-
-  (global-set-key (kbd "C-c C-f") #'yelang/cider-figwheel-repl))
-
 (defun yelang-programming/post-init-graphviz-dot-mode ()
   (with-eval-after-load 'graphviz-dot-mode
       (require 'company-keywords)
@@ -109,16 +78,10 @@
     (dumb-jump-go))
   (global-set-key (kbd "C-s-g") 'my-dumb-jump))
 
-(defun yelang-programming/post-init-clojure-mode ()
-  )
 
 (defun yelang-programming/post-init-emacs-lisp ()
     (remove-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
 
-(defun yelang-programming/post-init-python ()
-  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-  ;; if you use pyton3, then you could comment the following line
-  (setq python-shell-interpreter "python"))
 
 (defun yelang-programming/post-init-js-doc ()
   (setq js-doc-mail-address "huaming.li5012@gmai.com"
@@ -331,7 +294,7 @@
     (yelang|toggle-company-backends company-tern)
 
     (spacemacs/set-leader-keys-for-major-mode 'js2-mode
-      "tb" 'zilong/company-toggle-company-tern)
+      "tb" 'yelang/company-toggle-company-tern)
 
     (add-hook 'js2-mode-hook 'my-js2-mode-hook)
 
@@ -436,24 +399,6 @@
     :defer t
     ))
 
-(defun yelang-programming/post-init-lua-mode ()
-  (progn
-    (add-hook 'lua-mode-hook 'evil-matchit-mode)
-    ;; (add-hook 'lua-mode-hook 'smartparens-mode)
-    (setq lua-indent-level 2)
-
-;;; add lua language, basic, string and table keywords.
-    (with-eval-after-load 'lua-mode
-      (require 'company-keywords)
-      (push '(lua-mode  "setmetatable" "local" "function" "and" "break" "do" "else" "elseif" "self" "resume" "yield"
-                        "end" "false" "for" "function" "goto" "if" "nil" "not" "or" "repeat" "return" "then" "true"
-                        "until" "while" "__index" "dofile" "getmetatable" "ipairs" "pairs" "print" "rawget" "status"
-                        "rawset" "select" "_G" "assert" "collectgarbage" "error" "pcall" "coroutine"
-                        "rawequal" "require" "load" "tostring" "tonumber" "xpcall" "gmatch" "gsub"
-                        "rep" "reverse" "sub" "upper" "concat" "pack" "insert" "remove" "unpack" "sort"
-                        "lower") company-keywords-alist))
-
-    ))
 
 (defun yelang-programming/post-init-cc-mode ()
   (progn
@@ -501,7 +446,7 @@
   (progn
     (setq ycmd-tag-files 'auto)
     (setq ycmd-request-message-level -1)
-    (set-variable 'ycmd-server-command `("python" ,(expand-file-name "~/github/ycmd/ycmd/__main__.py")))
+    (set-variable 'ycmd-server-command `("python" ,(expand-file-name "~/github/ycmd/ycmd/")))
     (setq company-backends-c-mode-common '((company-c-headers
                                             company-dabbrev-code
                                             company-keywords
@@ -512,10 +457,10 @@
     (eval-after-load 'ycmd
       '(spacemacs|hide-lighter ycmd-mode))
 
-    ;; (spacemacs/set-leader-keys-for-major-mode 'c-mode
-    ;;   "tb" 'yelang/company-toggle-company-ycmd)
-    ;; (spacemacs/set-leader-keys-for-major-mode 'c++-mode
-    ;;   "tb" 'yelang/company-toggle-company-ycmd)
+    (spacemacs/set-leader-keys-for-major-mode 'c-mode
+      "tb" 'yelang/company-toggle-company-ycmd)
+    (spacemacs/set-leader-keys-for-major-mode 'c++-mode
+      "tb" 'yelang/company-toggle-company-ycmd)
 	))
 
 ;; when many project has the need to use tags, I will give etags-table and etags-update a try
@@ -570,11 +515,15 @@
     (when (configuration-layer/package-usedp 'company)
       (spacemacs|add-company-backends :modes shell-script-mode makefile-bsdmake-mode sh-mode lua-mode nxml-mode conf-unix-mode json-mode graphviz-dot-mode))
     ))
-(defun yelang-programming/post-init-company-c-headers ()
-  (progn
-    (setq company-c-headers-path-system
-          (quote
-           ("/usr/include/" "/usr/local/include/" "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1")))
-    (setq company-c-headers-path-user
-          (quote
-           ("/Users/guanghui/cocos2d-x/cocos/platform" "/Users/guanghui/cocos2d-x/cocos" "." "/Users/guanghui/cocos2d-x/cocos/audio/include/")))))
+
+
+(defun yelang/init-google-c-style ()
+  (use-package google-c-style
+    :defer t
+    :init
+    (add-hook 'c++-mode-hook
+              (lambda ()
+                (google-set-c-style)
+                (google-make-newline-indent)
+                ))))
+
