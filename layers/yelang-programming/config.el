@@ -9,6 +9,9 @@
             (define-key python-mode-map (kbd "C-c C-d") 'sphinx-doc)
             (define-key python-mode-map (kbd "C-c C-c") 'python-shell-send-buffer-switch)))
 
+(setq irony-mode-excluded-packages
+	  '(auto-complete-clang))
+
 (spacemacs|add-toggle iimage
   :status iimage-mode
   :on (iimage-mode)

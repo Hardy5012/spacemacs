@@ -85,7 +85,7 @@
     (and (fboundp 'recentf-cleanup)
          (recentf-cleanup))))
 
-;; (add-hook 'kill-emacs-hook #'yelang/cleanup-recentf)
+(add-hook 'kill-emacs-hook #'yelang/cleanup-recentf)
 
 ;; change evil initial mode state
 (menu-bar-mode t)

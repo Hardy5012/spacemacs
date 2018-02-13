@@ -7,7 +7,6 @@
         cmake-font-lock
         cmake-mode
         flycheck
-        impatient-mode
         nodejs-repl
         (nodejs-repl-eval :location local)
         js2-mode
@@ -25,9 +24,11 @@
         company
         (eldoc :location built-in)
         dumb-jump
-        graphviz-dot-mode
         robe
-		google-c-style
+		;; irony
+		;; company-irony
+		;; flycheck-irony
+		;; company-irony-c-headers
         ))
 
 (defun yelang-programming/init-sphinx-doc ()
@@ -65,10 +66,6 @@
         "sL" 'yelang/ruby-send-current-line-and-go
         "sI" 'yelang/start-inf-ruby-and-robe))))
 
-(defun yelang-programming/post-init-graphviz-dot-mode ()
-  (with-eval-after-load 'graphviz-dot-mode
-      (require 'company-keywords)
-      (push '(graphviz-dot-mode  "digraph" "node" "shape" "subgraph" "label" "edge" "bgcolor" "style" "record") company-keywords-alist)))
 
 (defun yelang-programming/post-init-dumb-jump ()
   (setq dumb-jump-selector 'ivy)
@@ -237,17 +234,10 @@
   (use-package cmake-font-lock
     :defer t))
 
-(defun yelang-programming/init-google-c-style ()
-  (use-package google-c-style
-    :init (add-hook 'c-mode-common-hook 'google-set-c-style)))
-
 (defun yelang-programming/post-init-cmake-mode ()
-  (progn
-    (spacemacs/declare-prefix-for-mode 'cmake-mode
-                                       "mh" "docs")
-    (spacemacs/set-leader-keys-for-major-mode 'cmake-mode
-      "hd" 'cmake-help)
-    (add-hook 'cmake-mode-hook (function cmake-rename-buffer))))
+   (use-package cmake-mode
+    :mode (("CMakeLists\\.txt\\'" . cmake-mode) ("\\.cmake\\'" . cmake-mode))
+    :init (push 'company-cmake company-backends-cmake-mode)))
 
 
 (defun yelang-programming/post-init-flycheck ()
@@ -259,19 +249,6 @@
 
 (defun yelang-programming/post-init-eldoc ()
   (setq eldoc-idle-delay 0.4))
-
-
-(defun yelang-programming/init-impatient-mode ()
-  "Initialize impatient mode"
-  (use-package impatient-mode
-    :init
-    (progn
-      (add-hook 'web-mode-hook 'yelang/impatient-mode-hook)
-      (spacemacs/set-leader-keys-for-major-mode 'web-mode
-        "p" 'imp-visit-buffer)
-      )))
-
-
 
 
 (defun yelang-programming/post-init-js2-refactor ()
@@ -402,12 +379,8 @@
 
 (defun yelang-programming/post-init-cc-mode ()
   (progn
-    (setq company-backends-c-mode-common '((company-dabbrev-code :with company-keywords company-gtags company-etags)
-                                           company-files company-dabbrev))
-    (spacemacs/set-leader-keys-for-major-mode 'c++-mode
-      "gd" 'etags-select-find-tag-at-point)
-
-
+    ;; (setq company-backends-c-mode-common '((company-dabbrev-code :with company-keywords company-gtags company-etags)
+    ;;                                        company-files company-dabbrev))
     ;; (add-hook 'c++-mode-hook 'my-setup-develop-environment)
     ;; (add-hook 'c-mode-hook 'my-setup-develop-environment)
 
@@ -442,26 +415,26 @@
     :init
     (eval-after-load 'flycheck '(flycheck-clojure-setup))))
 
-(defun yelang-programming/post-init-ycmd ()
-  (progn
-    (setq ycmd-tag-files 'auto)
-    (setq ycmd-request-message-level -1)
-    (set-variable 'ycmd-server-command `("python" ,(expand-file-name "~/github/ycmd/ycmd/")))
-    (setq company-backends-c-mode-common '((company-c-headers
-                                            company-dabbrev-code
-                                            company-keywords
-                                            company-gtags :with company-yasnippet)
-                                           company-files company-dabbrev ))
+;; (defun yelang-programming/post-init-ycmd ()
+;;   (progn
+;;     (setq ycmd-tag-files 'auto)
+;;     (setq ycmd-request-message-level -1)
+;;     (set-variable 'ycmd-server-command `("python" ,(expand-file-name "~/github/ycmd/ycmd/")))
+;;     (setq company-backends-c-mode-common '((company-c-headers
+;;                                             company-dabbrev-code
+;;                                             company-keywords
+;;                                             company-gtags :with company-yasnippet)
+;;                                            company-files company-dabbrev ))
 
-    (yelang|toggle-company-backends company-ycmd)
-    (eval-after-load 'ycmd
-      '(spacemacs|hide-lighter ycmd-mode))
+;;     (yelang|toggle-company-backends company-ycmd)
+;;     (eval-after-load 'ycmd
+;;       '(spacemacs|hide-lighter ycmd-mode))
 
-    (spacemacs/set-leader-keys-for-major-mode 'c-mode
-      "tb" 'yelang/company-toggle-company-ycmd)
-    (spacemacs/set-leader-keys-for-major-mode 'c++-mode
-      "tb" 'yelang/company-toggle-company-ycmd)
-	))
+;;     (spacemacs/set-leader-keys-for-major-mode 'c-mode
+;;       "tb" 'yelang/company-toggle-company-ycmd)
+;;     (spacemacs/set-leader-keys-for-major-mode 'c++-mode
+;;       "tb" 'yelang/company-toggle-company-ycmd)
+;; 	))
 
 ;; when many project has the need to use tags, I will give etags-table and etags-update a try
 (defun yelang-programming/init-etags-select ()
@@ -516,14 +489,46 @@
       (spacemacs|add-company-backends :modes shell-script-mode makefile-bsdmake-mode sh-mode lua-mode nxml-mode conf-unix-mode json-mode graphviz-dot-mode))
     ))
 
-
-(defun yelang/init-google-c-style ()
-  (use-package google-c-style
+(defun yelang-programming/init-irony ()
+  (use-package irony
     :defer t
     :init
-    (add-hook 'c++-mode-hook
-              (lambda ()
-                (google-set-c-style)
-                (google-make-newline-indent)
-                ))))
+    (progn
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      (add-hook 'objc-mode-hook 'irony-mode)
+      (add-hook 'irony-mode-hook
+                (lambda ()
+                  (define-key irony-mode-map [remap completion-at-point]
+                    'irony-completion-at-point-async)
+                  (define-key irony-mode-map [remap complete-symbol]
+                    'irony-completion-at-point-async)))
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+      (spacemacs|diminish irony-mode " Ⓘ" " I"))))
 
+(defun yelang-programming/init-company-irony ()
+  (use-package company-irony
+    :defer t
+    :init
+    (progn
+	  (setq company-backends (delete 'company-semantic company-backends))
+      (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+      (add-hook 'irony-mode-hook 'company-mode))))
+
+(defun yelang-programming/init-flycheck-irony ()
+  (use-package flycheck-irony
+    ;; :defer t                            ; fix this ???
+    :init
+    (progn
+      (eval-after-load 'flycheck
+        '(add-to-list 'flycheck-checkers 'irony))
+      (add-hook 'irony-mode-hook 'flycheck-mode))))
+
+(defun yelang-programming/company-irony-c-headers ()
+  (use-package company-irony
+    :defer t
+    :init
+    (progn
+	 (eval-after-load 'company
+  '(add-to-list
+    'company-backends '(company-irony-c-headers company-irony))) )))
