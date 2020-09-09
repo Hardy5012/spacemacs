@@ -1,12 +1,12 @@
 (defconst yelang-org-packages
   '(
     (org :location built-in)
-    org-mac-link
+    ;; org-mac-link
     org-pomodoro
     deft
     (blog-admin :location (recipe
-                           :fetcher github
-                           :repo "codefalling/blog-admin"))
+                            :fetcher github
+                            :repo "codefalling/blog-admin"))
     ;; org-tree-slide
     ;; ox-reveal
     ;; worf
@@ -187,7 +187,7 @@
        'org-babel-load-languages
        '((perl . t)
          (ruby . t)
-         (sh . t)
+         (shell . t)
          (dot . t)
          (js . t)
          (latex .t)
@@ -218,7 +218,12 @@ unwanted space when exporting org-mode to html."
       (setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
       (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
       (setq org-default-notes-file (expand-file-name "gtd.org" org-agenda-dir))
+      (setq org-agenda-file-blogposts (expand-file-name "all-posts.org" org-agenda-dir))
       (setq org-agenda-files (list org-agenda-dir))
+
+
+			;; C-n for the next org agenda item
+      (define-key org-agenda-mode-map (kbd "C-p") 'org-agenda-previous-item)
 
       (with-eval-after-load 'org-agenda
         (define-key org-agenda-mode-map (kbd "P") 'org-pomodoro)
@@ -255,6 +260,31 @@ unwanted space when exporting org-mode to html."
                "* %?"
                :empty-lines 1)))
 
+			(with-eval-after-load 'org-capture
+        (defun org-hugo-new-subtree-post-capture-template ()
+          "Returns `org-capture' template string for new Hugo post.
+See `org-capture-templates' for more information."
+          (let* ((title (read-from-minibuffer "Post Title: ")) ;Prompt to enter the post title
+                 (fname (org-hugo-slug title)))
+            (mapconcat #'identity
+                       `(
+                         ,(concat "* TODO " title)
+                         ":PROPERTIES:"
+                         ,(concat ":EXPORT_FILE_NAME: " fname)
+                         ":END:"
+                         "\n\n")        ;Place the cursor here finally
+                       "\n")))
+
+        (add-to-list 'org-capture-templates
+                     '("h"              ;`org-capture' binding + h
+                       "Hugo post"
+                       entry
+                       ;; It is assumed that below file is present in `org-directory'
+                       ;; and that it has a "Blog Ideas" heading. It can even be a
+                       ;; symlink pointing to the actual location of all-posts.org!
+                       (file+headline org-agenda-file-blogposts "Blog Ideas")
+                       (function org-hugo-new-subtree-post-capture-template))))
+
       ;;An entry without a cookie is treated just like priority ' B '.
       ;;So when create new task, they are default 重要且紧急
       (setq org-agenda-custom-commands
@@ -272,53 +302,52 @@ unwanted space when exporting org-mode to html."
                 (tags-todo "PROJECT") ;; review all projects (assuming you use todo keywords to designate projects)
                 ))))
 
-;;       (defvar yelang-website-html-preamble
-;;         "<div class='nav'>
-;; <ul>
-;; <li><a href='http://yelang.com'>博客</a></li>
-;; <li><a href='/index.html'>Wiki目录</a></li>
-;; </ul>
-;; </div>")
-;;       (defvar yelang-website-html-blog-head
-;;         " <link rel='stylesheet' href='css/site.css' type='text/css'/> \n
-;;     <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/worg.css\"/>")
-;;       (setq org-publish-project-alist
-;;             `(
-;;               ("blog-notes"
-;;                :base-directory "~/org-notes"
-;;                :base-extension "org"
-;;                :publishing-directory "~/org-notes/public_html/"
+			;;       (defvar yelang-website-html-preamble
+			;;         "<div class='nav'>
+			;; <ul>
+			;; <li><a href='http://yelang.com'>博客</a></li>
+			;; <li><a href='/index.html'>Wiki目录</a></li>
+			;; </ul>
+			;; </div>")
+			;;       (defvar yelang-website-html-blog-head
+			;;         " <link rel='stylesheet' href='css/site.css' type='text/css'/> \n
+			;;     <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/worg.css\"/>")
+			;;       (setq org-publish-project-alist
+			;;             `(
+			;;               ("blog-notes"
+			;;                :base-directory "~/org-notes"
+			;;                :base-extension "org"
+			;;                :publishing-directory "~/org-notes/public_html/"
 
-;;                :recursive t
-;;                :html-head , yelang-website-html-blog-head
-;;                :publishing-function org-html-publish-to-html
-;;                :headline-levels 4       ; Just the default for this project.
-;;                :auto-preamble t
-;;                :exclude "gtd.org"
-;;                :exclude-tags ("ol" "noexport")
-;;                :section-numbers nil
-;;                :html-preamble ,yelang-website-html-preamble
-;;                :author "yelang"
-;;                :email "guanghui8827@gmail.com"
-;;                :auto-sitemap t          ; Generate sitemap.org automagically...
-;;                :sitemap-filename "index.org" ; ... call it sitemap.org (it's the default)...
-;;                :sitemap-title "我的wiki"     ; ... with title 'Sitemap'.
-;;                :sitemap-sort-files anti-chronologically
-;;                :sitemap-file-entry-format "%t" ; %d to output date, we don't need date here
-;;                )
-;;               ("blog-static"
-;;                :base-directory "~/org-notes"
-;;                :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-;;                :publishing-directory "~/org-notes/public_html/"
-;;                :recursive t
-;;                :publishing-function org-publish-attachment
-;;                )
-;;               ("blog" :components ("blog-notes" "blog-static"))))
+			;;                :recursive t
+			;;                :html-head , yelang-website-html-blog-head
+			;;                :publishing-function org-html-publish-to-html
+			;;                :headline-levels 4       ; Just the default for this project.
+			;;                :auto-preamble t
+			;;                :exclude "gtd.org"
+			;;                :exclude-tags ("ol" "noexport")
+			;;                :section-numbers nil
+			;;                :html-preamble ,yelang-website-html-preamble
+			;;                :author "yelang"
+			;;                :email "guanghui8827@gmail.com"
+			;;                :auto-sitemap t          ; Generate sitemap.org automagically...
+			;;                :sitemap-filename "index.org" ; ... call it sitemap.org (it's the default)...
+			;;                :sitemap-title "我的wiki"     ; ... with title 'Sitemap'.
+			;;                :sitemap-sort-files anti-chronologically
+			;;                :sitemap-file-entry-format "%t" ; %d to output date, we don't need date here
+			;;                )
+			;;               ("blog-static"
+			;;                :base-directory "~/org-notes"
+			;;                :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+			;;                :publishing-directory "~/org-notes/public_html/"
+			;;                :recursive t
+			;;                :publishing-function org-publish-attachment
+			;;                )
+			;;               ("blog" :components ("blog-notes" "blog-static"))))
 
 
 
-      (add-hook 'org-after-todo-statistics-hook 'zilong/org-summary-todo)
-      ;; used by zilong/org-clock-sum-today-by-tags
+      (add-hook 'org-after-todo-statistics-hook 'yelang/org-summary-todo)
 
       (define-key org-mode-map (kbd "s-p") 'org-priority)
       (spacemacs/set-leader-keys-for-major-mode 'org-mode

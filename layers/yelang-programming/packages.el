@@ -25,10 +25,11 @@
         (eldoc :location built-in)
         dumb-jump
         robe
-		;; irony
-		;; company-irony
-		;; flycheck-irony
-		;; company-irony-c-headers
+				rust
+		  ;; irony
+		  ;; company-irony
+		  ;; flycheck-irony
+		  ;; company-irony-c-headers
         ))
 
 (defun yelang-programming/init-sphinx-doc ()
@@ -383,7 +384,8 @@
     ;;                                        company-files company-dabbrev))
     ;; (add-hook 'c++-mode-hook 'my-setup-develop-environment)
     ;; (add-hook 'c-mode-hook 'my-setup-develop-environment)
-
+		;; (add-hook 'c++-mode-hook 'ycmd-mode)
+		;; (add-hook 'c++-mode-hook 'irony-mode)
 
     ;; http://stackoverflow.com/questions/23553881/emacs-indenting-of-c11-lambda-functions-cc-mode
     (defadvice c-lineup-arglist (around my activate)

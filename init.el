@@ -30,7 +30,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(csv
+   '(rust
+		 react
+		 csv
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -75,7 +77,8 @@ values."
 		  
      markdown
      prodigy
-	 (org :variables org-want-todo-bindings t)
+		 (org :variables org-want-todo-bindings t
+					 org-enable-hugo-support t)
      yaml
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -347,12 +350,24 @@ you should place your code here."
   ;; (exec-path-from-shell-copy-env  "PROTOBUF_INCLUDE")
   (setq-default indent-tabs-mode t)
   (setq-default default-tab-width 4)
-  (define-coding-system-alias 'UTF-8 'utf-8)
+	(prefer-coding-system 'utf-8)
+	(define-coding-system-alias 'UTF-8 'utf-8)
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8)
+	(setq message-default-charset 'utf-8)
+	;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
   (global-hungry-delete-mode t)
+	(setq-default rust-format-on-save t)
   (set-variable 'ycmd-server-command '("python" "/home/huaming_li/github/ycmd/ycmd/"))
   ;; (set-variable 'ycmd-extra-conf-whitelist '("/home/huaming_li/github/lytz/stockbs_svr/build/"))
+	(defun my-ycmd--request-url-retrieve (f &rest args)
+		"Change ‘request-backend’ in ‘ycmd--request’ to ‘url-retrieve’.
+
+Work around https://github.com/abingham/emacs-ycmd/issues/496.
+"
+		(let ((request-backend 'url-retrieve))
+			(apply f args)))
+	(advice-add 'ycmd--request :around #'my-ycmd--request-url-retrieve)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

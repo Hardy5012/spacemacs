@@ -136,8 +136,8 @@
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
    (let ((src-code-types
-          '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
-            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+          '("emacs-lisp" "python" "C" "sh" "java" "js" "nxml" "C++" "css"
+            "dot" 
             "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
             "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
             "scheme" "sqlite")))
@@ -177,16 +177,17 @@
     (org-reset-subtask-state-maybe)
     (org-update-statistics-cookies t)))
 
-(defun zilong/org-summary-todo (n-done n-not-done)
+
+(defun yelang/org-summary-todo (n-done n-not-done)
   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   (let (org-log-done org-log-states)    ; turn off logging
     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
-(defun zilong/filter-by-tags ()
+(defun yelang/filter-by-tags ()
   (let ((head-tags (org-get-tags-at)))
     (member current-tag head-tags)))
 
-(defun zilong/org-clock-sum-today-by-tags (timerange &optional tstart tend noinsert)
+(defun yelang/org-clock-sum-today-by-tags (timerange &optional tstart tend noinsert)
   (interactive "P")
   (let* ((timerange-numeric-value (prefix-numeric-value timerange))
          (files (org-add-archive-files (org-agenda-files)))
@@ -208,7 +209,7 @@
                                 (error "No such file %s" file)))
       (with-current-buffer org-agenda-buffer
         (dolist (current-tag include-tags)
-          (org-clock-sum tstart tend 'zilong/filter-by-tags)
+          (org-clock-sum tstart tend 'yelang/filter-by-tags)
           (setcdr (assoc current-tag tags-time-alist)
                   (+ org-clock-file-total-minutes (cdr (assoc current-tag tags-time-alist)))))))
     (while (setq item (pop tags-time-alist))

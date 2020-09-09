@@ -1,4 +1,37 @@
-;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings
+(defun browse-hugo-maybe ()
+  (interactive)
+  (let ((hugo-service-name "Hugo Server")
+        (hugo-service-port "1313"))
+    (if (prodigy-service-started-p (prodigy-find-service hugo-service-name))
+        (progn
+          (message "Hugo detected, launching browser...")
+          (browse-url (concat "http://localhost:" hugo-service-port))))))
+
+(defun yelang/highlight-dwim ()
+  (interactive)
+  (if (use-region-p)
+      (progn
+        (highlight-frame-toggle)
+        (deactivate-mark))
+    (spacemacs/symbol-overlay)))
+
+(defun yelang/clearn-highlight ()
+    (interactive)
+  (clear-highlight-frame)
+  (symbol-overlay-remove-all))
+
+(defun ivy-with-thing-at-point (cmd)
+  (let ((ivy-initial-inputs-alist
+         (list
+          (cons cmd (thing-at-point 'symbol)))))
+    (funcall cmd)))
+
+;; Example 1
+(defun counsel-ag-thing-at-point ()
+  (interactive)
+  (ivy-with-thing-at-point 'counsel-ag))
+
+;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings\
 (defmacro adjust-major-mode-keymap-with-evil (m &optional r)
   `(eval-after-load (quote ,(if r r m))
      '(progn
@@ -161,7 +194,8 @@ org-files and bookmarks"
   `((name . "Mail and News")
     (candidates . (("Calendar" . (lambda ()  (browse-url "https://www.google.com/calendar/render")))
                    ("RSS" . elfeed)
-                   ("Blog" . blog-admin-start)
+									 ;; ("Blog" . browse-hugo-maybe)
+									 ("Blog" . blog-admin-start)
                    ("Github" . (lambda() (helm-github-stars)))
                    ("Calculator" . (lambda () (helm-calcul-expression)))
                    ("Run current flie" . (lambda () (yelang/run-current-file)))
